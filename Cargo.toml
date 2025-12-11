@@ -24,7 +24,7 @@ chrono = { version = "0.4", features = ["serde"] }
 dirs = "5.0"
 
 # Beautiful table output
-tabled = "0.16"
+tabled = "0.20"
 
 # Error handling
 anyhow = "1.0"
