@@ -6,12 +6,14 @@
 //! - Search commands by keyword
 //! - Delete commands by ID
 //! - Copy commands to clipboard
+//! - Interactive TUI mode (lazygit-like interface)
 
 mod cli;
 mod commands;
 mod error;
 mod models;
 mod storage;
+mod tui;
 
 use anyhow::Result;
 use clap::Parser;
@@ -30,7 +32,14 @@ fn main() {
 fn run() -> Result<()> {
     let cli = Cli::parse();
 
-    match cli.command {
+    // If no command specified, launch TUI mode
+    let command = cli.command.unwrap_or(Commands::Tui);
+
+    match command {
+        Commands::Tui => {
+            tui::run()?;
+        }
+
         Commands::Add {
             command,
             description,

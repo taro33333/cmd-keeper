@@ -11,12 +11,16 @@ use clap::{Parser, Subcommand};
 #[command(propagate_version = true)]
 pub struct Cli {
     #[command(subcommand)]
-    pub command: Commands,
+    pub command: Option<Commands>,
 }
 
 /// Available subcommands
 #[derive(Subcommand, Debug)]
 pub enum Commands {
+    /// Launch interactive TUI mode (default if no command specified)
+    #[command(visible_alias = "ui")]
+    Tui,
+
     /// Add a new command with description
     #[command(visible_alias = "a")]
     Add {
