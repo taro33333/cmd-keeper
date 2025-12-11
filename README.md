@@ -4,28 +4,30 @@
 [![Release](https://github.com/taro33333/cmd-keeper/actions/workflows/release.yml/badge.svg)](https://github.com/taro33333/cmd-keeper/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-📝 **よく使うコマンドとその説明をローカルで保存・管理・検索するCLIツール**
+**[日本語](./README_ja.md)** | English
 
-## 特徴
+📝 **A CLI tool to save, manage, and search frequently used commands locally**
 
-- 🖥️ **TUIモード**: インタラクティブUI
-- 🚀 **高速**: Rust製で高速に動作
-- 📦 **シンプル**: 依存関係が少なく、すぐに使える
-- 🏷️ **タグ機能**: コマンドをタグで整理
-- 🔍 **検索機能**: コマンド、説明、タグで検索可能
-- 📋 **クリップボード連携**: コマンドをワンクリックでコピー
-- 💾 **ローカル保存**: データはローカルのJSONファイルに安全に保存
-- ⌨️ **Vimライク操作**: `j`/`k` でのナビゲーションをサポート
+## Features
 
-## デモ
+- 🖥️ **TUI Mode**: Interactive terminal UI
+- 🚀 **Fast**: Built with Rust for high performance
+- 📦 **Simple**: Minimal dependencies, ready to use
+- 🏷️ **Tags**: Organize commands with tags
+- 🔍 **Search**: Search by command, description, or tags
+- 📋 **Clipboard**: Copy commands with one keystroke
+- 💾 **Local Storage**: Data stored safely in local JSON file
+- ⌨️ **Vim-like**: Navigation with `j`/`k` keys
+
+## Demo
 
 ![cmd-keeper demo](./demo.gif)
 
-## インストール
+## Installation
 
-### Homebrew（推奨）
+### Homebrew (Recommended)
 
-macOS / Linux ユーザーは Homebrew でインストールできます：
+For macOS / Linux users:
 
 ```bash
 brew install taro33333/tap/cmd-keeper
@@ -33,23 +35,23 @@ brew install taro33333/tap/cmd-keeper
 
 ### GitHub Releases
 
-[Releases](https://github.com/taro33333/cmd-keeper/releases) ページからバイナリをダウンロード：
+Download binaries from the [Releases](https://github.com/taro33333/cmd-keeper/releases) page:
 
-| OS | アーキテクチャ | ファイル名 |
-|----|--------------|-----------|
+| OS | Architecture | Filename |
+|----|--------------|----------|
 | macOS | Apple Silicon (M1/M2) | cmd-keeper-darwin-arm64 |
 | macOS | Intel | cmd-keeper-darwin-amd64 |
 | Linux | x86_64 | cmd-keeper-linux-amd64 |
 | Windows | x86_64 | cmd-keeper-windows-amd64.exe |
 
 ```bash
-# 例: macOS Apple Silicon
+# Example: macOS Apple Silicon
 curl -LO https://github.com/taro33333/cmd-keeper/releases/latest/download/cmd-keeper-darwin-arm64
 chmod +x cmd-keeper-darwin-arm64
 sudo mv cmd-keeper-darwin-arm64 /usr/local/bin/cmd-keeper
 ```
 
-### ソースからビルド
+### Build from Source
 
 ```bash
 git clone https://github.com/taro33333/cmd-keeper.git
@@ -63,157 +65,157 @@ cargo install --path .
 cargo install cmd-keeper
 ```
 
-## クイックスタート
+## Quick Start
 
 ```bash
-# TUIモードを起動（推奨）
+# Launch TUI mode (recommended)
 cmd-keeper
 
-# コマンドを追加（CLI）
-cmd-keeper add -c "git log --oneline -n 10" -d "直近10件のコミットを表示" -t git
+# Add a command (CLI)
+cmd-keeper add -c "git log --oneline -n 10" -d "Show last 10 commits" -t git
 
-# 一覧表示
+# List all commands
 cmd-keeper list
 
-# 検索
+# Search commands
 cmd-keeper search git
 
-# クリップボードにコピー
+# Copy to clipboard
 cmd-keeper copy 1
 ```
 
-## TUIモード（インタラクティブUI）
+## TUI Mode (Interactive UI)
 
-引数なしで実行すると、lazygit ライクなインタラクティブUIが起動します：
+Running without arguments launches an interactive UI:
 
 ```bash
 cmd-keeper
-# または
+# or
 cmd-keeper tui
 ```
 
-### キーバインド
+### Key Bindings
 
-#### Normal モード（リスト閲覧）
+#### Normal Mode (List View)
 
-| キー | 操作 |
-|-----|------|
-| `q` / `Esc` | 終了 |
-| `j` / `↓` | 下に移動 |
-| `k` / `↑` | 上に移動 |
-| `g` | 先頭に移動 |
-| `G` | 末尾に移動 |
-| `a` | コマンド追加モード |
-| `d` | 削除確認ダイアログ |
-| `Enter` / `y` | クリップボードにコピー |
+| Key | Action |
+|-----|--------|
+| `q` / `Esc` | Quit |
+| `j` / `↓` | Move down |
+| `k` / `↑` | Move up |
+| `g` | Go to top |
+| `G` | Go to bottom |
+| `a` | Add command mode |
+| `d` | Delete confirmation |
+| `Enter` / `y` | Copy to clipboard |
 
-#### Adding モード（コマンド追加）
+#### Adding Mode (Add Command)
 
-| キー | 操作 |
-|-----|------|
-| `Tab` | 次のフィールドへ |
-| `Shift+Tab` | 前のフィールドへ |
-| `Ctrl+S` | 保存 |
-| `Enter` | 次のフィールド / Tagsフィールドで保存 |
-| `Esc` | キャンセル |
+| Key | Action |
+|-----|--------|
+| `Tab` | Next field |
+| `Shift+Tab` | Previous field |
+| `Ctrl+S` | Save |
+| `Enter` | Next field / Save on Tags field |
+| `Esc` | Cancel |
 
-#### 削除確認ダイアログ
+#### Delete Confirmation
 
-| キー | 操作 |
-|-----|------|
-| `y` | 削除実行 |
-| `n` / `Esc` | キャンセル |
+| Key | Action |
+|-----|--------|
+| `y` | Confirm delete |
+| `n` / `Esc` | Cancel |
 
-## CLIモード
+## CLI Mode
 
-従来のコマンドライン操作も引き続きサポートしています。
+Traditional command-line operations are also supported.
 
-### コマンドを追加する
+### Add a Command
 
 ```bash
-# 基本的な使用法
-cmd-keeper add -c "git log --oneline -n 10" -d "直近10件のコミットを表示"
+# Basic usage
+cmd-keeper add -c "git log --oneline -n 10" -d "Show last 10 commits"
 
-# タグ付きで追加
-cmd-keeper add -c "docker ps -a" -d "全てのコンテナを表示" -t docker,container
+# With tags
+cmd-keeper add -c "docker ps -a" -d "List all containers" -t docker,container
 ```
 
-### コマンドを一覧表示する
+### List Commands
 
 ```bash
-# 全てのコマンドを表示
+# List all commands
 cmd-keeper list
 
-# 省略せずに全文表示
+# Show full content without truncation
 cmd-keeper list --full
 ```
 
-出力例:
+Example output:
 
 ```
 ╭────┬───────────────────────────────┬──────────────────────────┬─────────────╮
 │ ID │ Command                       │ Description              │ Tags        │
 ├────┼───────────────────────────────┼──────────────────────────┼─────────────┤
-│ 1  │ git log --oneline -n 10       │ 直近10件のコミットを表示   │ git         │
-│ 2  │ docker ps -a                  │ 全てのコンテナを表示       │ docker      │
+│ 1  │ git log --oneline -n 10       │ Show last 10 commits     │ git         │
+│ 2  │ docker ps -a                  │ List all containers      │ docker      │
 ╰────┴───────────────────────────────┴──────────────────────────┴─────────────╯
 
 Total: 2 command(s)
 ```
 
-### コマンドを検索する
+### Search Commands
 
 ```bash
-# キーワードで検索（コマンド、説明、タグを検索）
+# Search by keyword (searches command, description, and tags)
 cmd-keeper search docker
 
-# 省略せずに全文表示
+# Show full content
 cmd-keeper search git --full
 ```
 
-### コマンドを削除する
+### Delete a Command
 
 ```bash
-# 確認あり
+# With confirmation
 cmd-keeper delete 1
 
-# 確認なしで強制削除
+# Force delete (skip confirmation)
 cmd-keeper delete 1 --force
 ```
 
-### コマンドをクリップボードにコピーする
+### Copy to Clipboard
 
 ```bash
 cmd-keeper copy 1
 ```
 
-### データベースのパスを表示する
+### Show Database Path
 
 ```bash
 cmd-keeper path
 ```
 
-## コマンドリファレンス
+## Command Reference
 
-| コマンド | エイリアス | 説明 |
-|---------|-----------|------|
-| (なし) | - | TUIモードを起動 |
-| `tui` | `ui` | TUIモードを起動 |
-| `add` | `a` | コマンドを追加 |
-| `list` | `ls` | 全コマンドを表示 |
-| `search` | `s` | キーワードで検索 |
-| `delete` | `rm` | IDで削除 |
-| `copy` | `cp` | クリップボードにコピー |
-| `path` | - | DBパスを表示 |
+| Command | Alias | Description |
+|---------|-------|-------------|
+| (none) | - | Launch TUI mode |
+| `tui` | `ui` | Launch TUI mode |
+| `add` | `a` | Add a command |
+| `list` | `ls` | List all commands |
+| `search` | `s` | Search by keyword |
+| `delete` | `rm` | Delete by ID |
+| `copy` | `cp` | Copy to clipboard |
+| `path` | - | Show database path |
 
-## データ保存場所
+## Data Storage
 
-コマンドは以下の場所にJSON形式で保存されます:
+Commands are stored in JSON format at:
 
 - **Linux/macOS**: `~/.config/cmd-keeper/commands.json`
 - **Windows**: `C:\Users\<USER>\AppData\Roaming\cmd-keeper\commands.json`
 
-### データ構造
+### Data Structure
 
 ```json
 {
@@ -222,7 +224,7 @@ cmd-keeper path
     {
       "id": 1,
       "command": "git log --oneline -n 10",
-      "description": "直近10件のコミットを表示",
+      "description": "Show last 10 commits",
       "tags": ["git"],
       "created_at": "2024-01-15T10:30:00Z"
     }
@@ -230,59 +232,59 @@ cmd-keeper path
 }
 ```
 
-## 開発
+## Development
 
-### ビルド
+### Build
 
 ```bash
 cargo build --release
 ```
 
-### テスト
+### Test
 
 ```bash
 cargo test
 ```
 
-### フォーマット
+### Format
 
 ```bash
 cargo fmt
 ```
 
-### リント
+### Lint
 
 ```bash
 cargo clippy
 ```
 
-## 技術スタック
+## Tech Stack
 
-- **言語**: Rust (Edition 2021)
+- **Language**: Rust (Edition 2021)
 - **CLI**: clap (derive feature)
 - **TUI**: ratatui + crossterm
-- **シリアライズ**: serde + serde_json
-- **日時**: chrono
-- **エラーハンドリング**: anyhow + thiserror
+- **Serialization**: serde + serde_json
+- **DateTime**: chrono
+- **Error Handling**: anyhow + thiserror
 
-## リリース手順
+## Release Process
 
-1. バージョンを更新 (`Cargo.toml`)
-2. タグを作成してプッシュ:
+1. Update version in `Cargo.toml`
+2. Create and push a tag:
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-3. GitHub Actions が自動的にビルド・リリースを実行
-4. Homebrew Formula が自動更新される
+3. GitHub Actions will automatically build and release
+4. Homebrew Formula will be updated automatically
 
-## ライセンス
+## License
 
 MIT License
 
-## リンク
+## Links
 
 - [GitHub Repository](https://github.com/taro33333/cmd-keeper)
 - [Releases](https://github.com/taro33333/cmd-keeper/releases)
