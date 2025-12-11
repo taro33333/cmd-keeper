@@ -27,7 +27,10 @@ pub fn execute(id: u64, force: bool) -> Result<()> {
         println!("  {} {}", "Description:".dimmed(), entry.description);
         println!();
 
-        print!("{}", "Are you sure you want to delete this? [y/N] ".yellow());
+        print!(
+            "{}",
+            "Are you sure you want to delete this? [y/N] ".yellow()
+        );
         io::stdout().flush()?;
 
         let mut input = String::new();
@@ -53,4 +56,3 @@ pub fn execute(id: u64, force: bool) -> Result<()> {
 
     Ok(())
 }
-

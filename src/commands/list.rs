@@ -66,10 +66,7 @@ pub fn execute(full: bool) -> Result<()> {
 
     if entries.is_empty() {
         println!("{}", "No commands saved yet.".yellow());
-        println!(
-            "Use {} to add your first command.",
-            "cmd-keeper add".cyan()
-        );
+        println!("Use {} to add your first command.", "cmd-keeper add".cyan());
         return Ok(());
     }
 
@@ -92,4 +89,3 @@ pub fn execute(full: bool) -> Result<()> {
 
     Ok(())
 }
-

@@ -90,7 +90,9 @@ impl CommandDatabase {
             .filter(|e| {
                 e.command.to_lowercase().contains(&keyword_lower)
                     || e.description.to_lowercase().contains(&keyword_lower)
-                    || e.tags.iter().any(|t| t.to_lowercase().contains(&keyword_lower))
+                    || e.tags
+                        .iter()
+                        .any(|t| t.to_lowercase().contains(&keyword_lower))
             })
             .collect()
     }
@@ -124,7 +126,11 @@ mod tests {
         let mut db = CommandDatabase::new();
         db.add("git status".to_string(), "Show status".to_string(), vec![]);
         db.add("git log".to_string(), "Show log".to_string(), vec![]);
-        db.add("docker ps".to_string(), "List containers".to_string(), vec![]);
+        db.add(
+            "docker ps".to_string(),
+            "List containers".to_string(),
+            vec![],
+        );
 
         let results = db.search("git");
         assert_eq!(results.len(), 2);
@@ -140,4 +146,3 @@ mod tests {
         assert!(db.entries.is_empty());
     }
 }
-

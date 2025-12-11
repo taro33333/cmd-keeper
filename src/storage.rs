@@ -103,4 +103,3 @@ mod tests {
         assert_eq!(loaded_db.entries[0].command, "test cmd");
     }
 }
-

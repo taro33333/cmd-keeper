@@ -87,4 +87,3 @@ pub fn execute(keyword: &str, full: bool) -> Result<()> {
 
     Ok(())
 }
-

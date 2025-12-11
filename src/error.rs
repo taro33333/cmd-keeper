@@ -31,4 +31,3 @@ pub enum CmdKeeperError {
 
 /// Result type alias for cmd-keeper operations
 pub type Result<T> = std::result::Result<T, CmdKeeperError>;
-

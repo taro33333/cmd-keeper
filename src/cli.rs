@@ -73,4 +73,3 @@ pub enum Commands {
     /// Show the path to the database file
     Path,
 }
-

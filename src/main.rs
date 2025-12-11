@@ -67,4 +67,3 @@ fn run() -> Result<()> {
 
     Ok(())
 }
-

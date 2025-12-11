@@ -25,13 +25,9 @@ pub fn execute(id: u64) -> Result<()> {
         .set_text(&entry.command)
         .context("Failed to copy to clipboard")?;
 
-    println!(
-        "{} Command copied to clipboard!",
-        "✓".green().bold()
-    );
+    println!("{} Command copied to clipboard!", "✓".green().bold());
     println!("  {} {}", "ID:".dimmed(), entry.id);
     println!("  {} {}", "Command:".dimmed(), entry.command.cyan());
 
     Ok(())
 }
-

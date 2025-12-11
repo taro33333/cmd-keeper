@@ -25,4 +25,3 @@ pub fn execute(command: &str, description: &str, tags: Option<Vec<String>>) -> R
 
     Ok(())
 }
-
