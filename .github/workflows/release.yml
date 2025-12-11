@@ -33,7 +33,7 @@ jobs:
             os: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -74,7 +74,7 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Get version
         id: get_version
@@ -157,7 +157,7 @@ jobs:
           echo "darwin_arm64=$(grep 'cmd-keeper-darwin-arm64' checksums.txt | awk '{print $1}')" >> $GITHUB_OUTPUT
 
       - name: Checkout homebrew-tap
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: taro33333/homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
