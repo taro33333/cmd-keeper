@@ -34,7 +34,7 @@ thiserror = "2.0"
 arboard = "3.4"
 
 # Colored terminal output
-colored = "2.1"
+colored = "3.0"
 
 # TUI (Terminal User Interface)
 ratatui = "0.29"
