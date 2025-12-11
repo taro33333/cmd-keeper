@@ -180,7 +180,7 @@ fn render_status_bar(frame: &mut Frame, app: &App, area: Rect) {
 fn render_help_bar(frame: &mut Frame, app: &App, area: Rect) {
     let help_text = match &app.mode {
         Mode::Normal => {
-            " q: Quit │ a: Add │ d: Delete │ Enter/y: Copy │ j/↓: Down │ k/↑: Up │ g: Top │ G: Bottom "
+            " q: Quit │ a: Add │ d: Delete │ x/Enter: Run │ y: Copy │ j/k: Move │ g/G: Top/Bottom "
         }
         Mode::Adding(_) => " Tab: Next Field │ Shift+Tab: Prev │ Ctrl+S: Save │ Esc: Cancel ",
         Mode::ConfirmDelete => " y: Confirm Delete │ n/Esc: Cancel ",

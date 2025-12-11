@@ -204,4 +204,3 @@ Set Framerate 10
 
 - [VHS 公式ドキュメント](https://github.com/charmbracelet/vhs)
 - [VHS コマンドリファレンス](https://github.com/charmbracelet/vhs#commands)
-

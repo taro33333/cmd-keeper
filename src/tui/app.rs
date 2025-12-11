@@ -50,6 +50,7 @@ pub enum Message {
 
     // Actions
     CopyToClipboard,
+    ExecuteCommand,
 
     // Exit
     Quit,
@@ -79,6 +80,9 @@ pub struct App<'a> {
 
     /// Whether the app should quit
     pub should_quit: bool,
+
+    /// Flag indicating a command execution is requested
+    pub execute_requested: bool,
 }
 
 impl<'a> App<'a> {
@@ -109,12 +113,18 @@ impl<'a> App<'a> {
             tags_input,
             status_message: None,
             should_quit: false,
+            execute_requested: false,
         })
     }
 
     /// Returns the currently selected command entry
     pub fn selected_entry(&self) -> Option<&CommandEntry> {
         self.db.entries.get(self.selected_index)
+    }
+
+    /// Returns the command string of the selected entry
+    pub fn selected_command(&self) -> Option<String> {
+        self.selected_entry().map(|e| e.command.clone())
     }
 
     /// Returns the number of entries
@@ -187,6 +197,11 @@ impl<'a> App<'a> {
             }
             Message::CopyToClipboard => {
                 self.copy_to_clipboard()?;
+            }
+            Message::ExecuteCommand => {
+                if self.selected_entry().is_some() {
+                    self.execute_requested = true;
+                }
             }
             Message::Quit => {
                 self.should_quit = true;

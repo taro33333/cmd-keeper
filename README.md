@@ -107,7 +107,8 @@ cmd-keeper tui
 | `G` | Go to bottom |
 | `a` | Add command mode |
 | `d` | Delete confirmation |
-| `Enter` / `y` | Copy to clipboard |
+| `x` / `Enter` | Execute command |
+| `y` | Copy to clipboard |
 
 #### Adding Mode (Add Command)
 

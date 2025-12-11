@@ -41,6 +41,9 @@ ratatui = "0.29"
 crossterm = "0.28"
 tui-textarea = "0.7"
 
+# Shell command parsing
+shell-words = "1.1"
+
 [dev-dependencies]
 # Temporary file/directory for testing
 tempfile = "3.14"

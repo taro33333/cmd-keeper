@@ -43,7 +43,8 @@ fn handle_normal_mode(key: KeyEvent) -> Option<Message> {
         // Actions
         KeyCode::Char('a') => Some(Message::StartAdding),
         KeyCode::Char('d') => Some(Message::StartDelete),
-        KeyCode::Char('y') | KeyCode::Enter => Some(Message::CopyToClipboard),
+        KeyCode::Char('y') => Some(Message::CopyToClipboard),
+        KeyCode::Char('x') | KeyCode::Enter => Some(Message::ExecuteCommand),
 
         _ => None,
     }
