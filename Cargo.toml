@@ -21,7 +21,7 @@ serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 
 # OS-specific directories (e.g., ~/.config)
-dirs = "5.0"
+dirs = "6.0"
 
 # Beautiful table output
 tabled = "0.16"
