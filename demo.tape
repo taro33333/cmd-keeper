@@ -8,20 +8,18 @@ Set Width 1200
 Set Height 800
 Set Theme "Catppuccin Mocha"
 
-# Start
+# Start TUI
 Type "cmd-keeper"
 Enter
 Sleep 2s
 
-# Navigate down
+# Navigate through commands
 Type "j"
-Sleep 500ms
+Sleep 400ms
 Type "j"
-Sleep 500ms
-
-# Navigate up
+Sleep 400ms
 Type "k"
-Sleep 500ms
+Sleep 400ms
 
 # Copy to clipboard
 Type "y"
@@ -30,30 +28,54 @@ Sleep 1s
 # Add new command
 Type "a"
 Sleep 1s
-
-# Type command
 Type "docker compose up -d"
-Sleep 500ms
+Sleep 600ms
 Tab
 Sleep 300ms
-
-# Type description
 Type "Start all containers in background"
-Sleep 500ms
+Sleep 600ms
 Tab
 Sleep 300ms
-
-# Type tags
 Type "docker,compose"
 Sleep 500ms
-
-# Save with Enter (in Tags field, Enter saves)
 Enter
-Sleep 1s
+Sleep 1.5s
 
-# Show the new command
+# Navigate to the new command
 Type "G"
+Sleep 800ms
+
+# Edit the command
+Type "e"
 Sleep 1s
+Type "docker compose up -d --build"
+Sleep 600ms
+Tab
+Sleep 300ms
+Tab
+Sleep 300ms
+Enter
+Sleep 1.5s
+
+# Navigate up
+Type "g"
+Sleep 600ms
+
+# Execute a command
+Type "x"
+Sleep 2s
+Enter
+Sleep 1.5s
+
+# Navigate down
+Type "j"
+Sleep 400ms
+
+# Delete confirmation (cancel)
+Type "d"
+Sleep 800ms
+Type "n"
+Sleep 800ms
 
 # Quit
 Type "q"
