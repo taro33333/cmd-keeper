@@ -14,14 +14,16 @@ pub enum Mode {
     /// Normal mode - browsing the command list
     Normal,
     /// Adding a new command
-    Adding(AddingField),
+    Adding(InputField),
+    /// Editing an existing command
+    Editing(InputField),
     /// Confirming deletion
     ConfirmDelete,
 }
 
-/// Which field is being edited in Adding mode
+/// Which field is being edited in Adding/Editing mode
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum AddingField {
+pub enum InputField {
     Command,
     Description,
     Tags,
@@ -36,10 +38,17 @@ pub enum Message {
     MoveToTop,
     MoveToBottom,
 
-    // Mode transitions
+    // Mode transitions - Adding
     StartAdding,
     CancelAdding,
     ConfirmAdd,
+
+    // Mode transitions - Editing
+    StartEditing,
+    CancelEditing,
+    ConfirmEdit,
+
+    // Field navigation
     NextField,
     PrevField,
 
@@ -70,10 +79,13 @@ pub struct App<'a> {
     /// Currently selected index in the list
     pub selected_index: usize,
 
-    /// Text areas for adding new command
+    /// Text areas for adding/editing command
     pub command_input: TextArea<'a>,
     pub description_input: TextArea<'a>,
     pub tags_input: TextArea<'a>,
+
+    /// ID of the entry being edited (only valid in Editing mode)
+    pub editing_id: Option<u64>,
 
     /// Status message to display
     pub status_message: Option<String>,
@@ -111,6 +123,7 @@ impl<'a> App<'a> {
             command_input,
             description_input,
             tags_input,
+            editing_id: None,
             status_message: None,
             should_quit: false,
             execute_requested: false,
@@ -154,35 +167,52 @@ impl<'a> App<'a> {
                 }
             }
             Message::StartAdding => {
-                self.mode = Mode::Adding(AddingField::Command);
+                self.mode = Mode::Adding(InputField::Command);
                 self.clear_inputs();
             }
             Message::CancelAdding => {
                 self.mode = Mode::Normal;
                 self.clear_inputs();
             }
-            Message::NextField => {
-                if let Mode::Adding(field) = &self.mode {
-                    self.mode = Mode::Adding(match field {
-                        AddingField::Command => AddingField::Description,
-                        AddingField::Description => AddingField::Tags,
-                        AddingField::Tags => AddingField::Command,
-                    });
-                }
-            }
-            Message::PrevField => {
-                if let Mode::Adding(field) = &self.mode {
-                    self.mode = Mode::Adding(match field {
-                        AddingField::Command => AddingField::Tags,
-                        AddingField::Description => AddingField::Command,
-                        AddingField::Tags => AddingField::Description,
-                    });
-                }
-            }
             Message::ConfirmAdd => {
                 self.add_command()?;
                 self.mode = Mode::Normal;
             }
+            Message::StartEditing => {
+                if let Some(entry) = self.selected_entry().cloned() {
+                    self.editing_id = Some(entry.id);
+                    self.load_entry_to_inputs(&entry);
+                    self.mode = Mode::Editing(InputField::Command);
+                }
+            }
+            Message::CancelEditing => {
+                self.mode = Mode::Normal;
+                self.editing_id = None;
+                self.clear_inputs();
+            }
+            Message::ConfirmEdit => {
+                self.update_command()?;
+                self.mode = Mode::Normal;
+                self.editing_id = None;
+            }
+            Message::NextField => match &self.mode {
+                Mode::Adding(field) => {
+                    self.mode = Mode::Adding(Self::next_field(field));
+                }
+                Mode::Editing(field) => {
+                    self.mode = Mode::Editing(Self::next_field(field));
+                }
+                _ => {}
+            },
+            Message::PrevField => match &self.mode {
+                Mode::Adding(field) => {
+                    self.mode = Mode::Adding(Self::prev_field(field));
+                }
+                Mode::Editing(field) => {
+                    self.mode = Mode::Editing(Self::prev_field(field));
+                }
+                _ => {}
+            },
             Message::StartDelete => {
                 if !self.db.entries.is_empty() {
                     self.mode = Mode::ConfirmDelete;
@@ -210,6 +240,24 @@ impl<'a> App<'a> {
         Ok(())
     }
 
+    /// Returns the next field in sequence
+    fn next_field(field: &InputField) -> InputField {
+        match field {
+            InputField::Command => InputField::Description,
+            InputField::Description => InputField::Tags,
+            InputField::Tags => InputField::Command,
+        }
+    }
+
+    /// Returns the previous field in sequence
+    fn prev_field(field: &InputField) -> InputField {
+        match field {
+            InputField::Command => InputField::Tags,
+            InputField::Description => InputField::Command,
+            InputField::Tags => InputField::Description,
+        }
+    }
+
     /// Clears all input fields
     fn clear_inputs(&mut self) {
         self.command_input = TextArea::default();
@@ -226,6 +274,24 @@ impl<'a> App<'a> {
         self.tags_input = TextArea::default();
         self.tags_input
             .set_placeholder_text("Enter tags (comma-separated)...");
+        self.tags_input
+            .set_cursor_line_style(ratatui::style::Style::default());
+    }
+
+    /// Loads an entry's data into the input fields for editing
+    fn load_entry_to_inputs(&mut self, entry: &CommandEntry) {
+        self.command_input = TextArea::default();
+        self.command_input.insert_str(&entry.command);
+        self.command_input
+            .set_cursor_line_style(ratatui::style::Style::default());
+
+        self.description_input = TextArea::default();
+        self.description_input.insert_str(&entry.description);
+        self.description_input
+            .set_cursor_line_style(ratatui::style::Style::default());
+
+        self.tags_input = TextArea::default();
+        self.tags_input.insert_str(entry.tags.join(", "));
         self.tags_input
             .set_cursor_line_style(ratatui::style::Style::default());
     }
@@ -258,6 +324,42 @@ impl<'a> App<'a> {
         Ok(())
     }
 
+    /// Updates an existing command from the input fields
+    fn update_command(&mut self) -> Result<()> {
+        let Some(id) = self.editing_id else {
+            self.status_message = Some("No command selected for editing".to_string());
+            return Ok(());
+        };
+
+        let command = self.command_input.lines().join("\n").trim().to_string();
+        let description = self.description_input.lines().join("\n").trim().to_string();
+        let tags_str = self.tags_input.lines().join("\n").trim().to_string();
+
+        if command.is_empty() {
+            self.status_message = Some("Command cannot be empty".to_string());
+            return Ok(());
+        }
+
+        let tags: Vec<String> = if tags_str.is_empty() {
+            vec![]
+        } else {
+            tags_str.split(',').map(|s| s.trim().to_string()).collect()
+        };
+
+        if self
+            .db
+            .update(id, Some(command), Some(description), Some(tags))
+        {
+            self.storage.save(&self.db)?;
+            self.status_message = Some(format!("✓ Command {} updated", id));
+        } else {
+            self.status_message = Some(format!("✗ Command {} not found", id));
+        }
+
+        self.clear_inputs();
+        Ok(())
+    }
+
     /// Deletes the currently selected command
     fn delete_selected(&mut self) -> Result<()> {
         if let Some(entry) = self.selected_entry() {
@@ -284,14 +386,22 @@ impl<'a> App<'a> {
         Ok(())
     }
 
-    /// Returns the current text area based on the adding field
+    /// Returns the current text area based on the current mode and field
     pub fn current_textarea_mut(&mut self) -> Option<&mut TextArea<'a>> {
         match &self.mode {
-            Mode::Adding(field) => Some(match field {
-                AddingField::Command => &mut self.command_input,
-                AddingField::Description => &mut self.description_input,
-                AddingField::Tags => &mut self.tags_input,
+            Mode::Adding(field) | Mode::Editing(field) => Some(match field {
+                InputField::Command => &mut self.command_input,
+                InputField::Description => &mut self.description_input,
+                InputField::Tags => &mut self.tags_input,
             }),
+            _ => None,
+        }
+    }
+
+    /// Returns the current input field if in Adding or Editing mode
+    pub fn current_field(&self) -> Option<&InputField> {
+        match &self.mode {
+            Mode::Adding(field) | Mode::Editing(field) => Some(field),
             _ => None,
         }
     }

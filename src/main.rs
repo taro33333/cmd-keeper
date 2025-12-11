@@ -2,6 +2,7 @@
 //!
 //! ## Features
 //! - Add commands with descriptions and tags
+//! - Edit existing commands
 //! - List all saved commands
 //! - Search commands by keyword
 //! - Delete commands by ID
@@ -54,6 +55,15 @@ fn run() -> Result<()> {
 
         Commands::Search { keyword, full } => {
             commands::search(&keyword, full)?;
+        }
+
+        Commands::Edit {
+            id,
+            command,
+            description,
+            tags,
+        } => {
+            commands::edit(id, command, description, tags)?;
         }
 
         Commands::Delete { id, force } => {

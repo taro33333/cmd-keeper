@@ -203,6 +203,7 @@ cmd-keeper path
 | (なし) | - | TUIモードを起動 |
 | `tui` | `ui` | TUIモードを起動 |
 | `add` | `a` | コマンドを追加 |
+| `edit` | `e` | 既存のコマンドを編集 |
 | `list` | `ls` | 全コマンドを表示 |
 | `search` | `s` | キーワードで検索 |
 | `delete` | `rm` | IDで削除 |

@@ -56,6 +56,25 @@ pub enum Commands {
         full: bool,
     },
 
+    /// Edit an existing command by ID
+    #[command(visible_alias = "e")]
+    Edit {
+        /// ID of the command to edit
+        id: u64,
+
+        /// New command string (optional)
+        #[arg(short, long)]
+        command: Option<String>,
+
+        /// New description (optional)
+        #[arg(short, long)]
+        description: Option<String>,
+
+        /// New tags (comma-separated, optional)
+        #[arg(short, long, value_delimiter = ',')]
+        tags: Option<Vec<String>>,
+    },
+
     /// Delete a command by ID
     #[command(visible_alias = "rm")]
     Delete {

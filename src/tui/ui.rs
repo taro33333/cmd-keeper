@@ -10,7 +10,7 @@ use ratatui::{
     Frame,
 };
 
-use super::app::{AddingField, App, Mode};
+use super::app::{App, InputField, Mode};
 
 /// Main render function (View in Elm Architecture)
 pub fn render(frame: &mut Frame, app: &mut App) {
@@ -38,7 +38,8 @@ pub fn render(frame: &mut Frame, app: &mut App) {
 
     // Render popups if needed
     match &app.mode {
-        Mode::Adding(_) => render_add_popup(frame, app),
+        Mode::Adding(_) => render_input_popup(frame, app, "Add New Command", Color::Green),
+        Mode::Editing(_) => render_input_popup(frame, app, "Edit Command", Color::Yellow),
         Mode::ConfirmDelete => render_delete_confirm(frame, app),
         _ => {}
     }
@@ -180,9 +181,11 @@ fn render_status_bar(frame: &mut Frame, app: &App, area: Rect) {
 fn render_help_bar(frame: &mut Frame, app: &App, area: Rect) {
     let help_text = match &app.mode {
         Mode::Normal => {
-            " q: Quit │ a: Add │ d: Delete │ x/Enter: Run │ y: Copy │ j/k: Move │ g/G: Top/Bottom "
+            " q: Quit │ a: Add │ e: Edit │ d: Delete │ x/Enter: Run │ y: Copy │ j/k: Move "
         }
-        Mode::Adding(_) => " Tab: Next Field │ Shift+Tab: Prev │ Ctrl+S: Save │ Esc: Cancel ",
+        Mode::Adding(_) | Mode::Editing(_) => {
+            " Tab: Next Field │ Shift+Tab: Prev │ Ctrl+S: Save │ Esc: Cancel "
+        }
         Mode::ConfirmDelete => " y: Confirm Delete │ n/Esc: Cancel ",
     };
 
@@ -192,18 +195,18 @@ fn render_help_bar(frame: &mut Frame, app: &App, area: Rect) {
     frame.render_widget(paragraph, area);
 }
 
-/// Renders the add command popup
-fn render_add_popup(frame: &mut Frame, app: &mut App) {
+/// Renders the input popup for adding or editing commands
+fn render_input_popup(frame: &mut Frame, app: &mut App, title: &str, color: Color) {
     let area = centered_rect(60, 50, frame.area());
 
     // Clear the area first
     frame.render_widget(Clear, area);
 
     let block = Block::default()
-        .title(" Add New Command ")
-        .title_style(Style::default().fg(Color::Green).bold())
+        .title(format!(" {} ", title))
+        .title_style(Style::default().fg(color).bold())
         .borders(Borders::ALL)
-        .border_style(Style::default().fg(Color::Green));
+        .border_style(Style::default().fg(color));
 
     frame.render_widget(block, area);
 
@@ -220,16 +223,13 @@ fn render_add_popup(frame: &mut Frame, app: &mut App) {
         .split(area);
 
     // Determine which field is active
-    let active_field = match &app.mode {
-        Mode::Adding(field) => field.clone(),
-        _ => AddingField::Command,
-    };
+    let active_field = app.current_field().cloned().unwrap_or(InputField::Command);
 
     // Command input
     let command_block = Block::default()
         .title(" Command ")
         .borders(Borders::ALL)
-        .border_style(if active_field == AddingField::Command {
+        .border_style(if active_field == InputField::Command {
             Style::default().fg(Color::Yellow)
         } else {
             Style::default().fg(Color::DarkGray)
@@ -241,7 +241,7 @@ fn render_add_popup(frame: &mut Frame, app: &mut App) {
     let desc_block = Block::default()
         .title(" Description ")
         .borders(Borders::ALL)
-        .border_style(if active_field == AddingField::Description {
+        .border_style(if active_field == InputField::Description {
             Style::default().fg(Color::Yellow)
         } else {
             Style::default().fg(Color::DarkGray)
@@ -253,7 +253,7 @@ fn render_add_popup(frame: &mut Frame, app: &mut App) {
     let tags_block = Block::default()
         .title(" Tags (comma-separated) ")
         .borders(Borders::ALL)
-        .border_style(if active_field == AddingField::Tags {
+        .border_style(if active_field == InputField::Tags {
             Style::default().fg(Color::Yellow)
         } else {
             Style::default().fg(Color::DarkGray)

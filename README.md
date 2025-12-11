@@ -203,6 +203,7 @@ cmd-keeper path
 | (none) | - | Launch TUI mode |
 | `tui` | `ui` | Launch TUI mode |
 | `add` | `a` | Add a command |
+| `edit` | `e` | Edit an existing command |
 | `list` | `ls` | List all commands |
 | `search` | `s` | Search by keyword |
 | `delete` | `rm` | Delete by ID |

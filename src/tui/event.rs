@@ -5,7 +5,7 @@
 use anyhow::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyModifiers};
 
-use super::app::{AddingField, App, Message, Mode};
+use super::app::{App, InputField, Message, Mode};
 
 /// Handles keyboard input and returns appropriate messages
 pub fn handle_event(app: &mut App) -> Result<Option<Message>> {
@@ -21,7 +21,8 @@ pub fn handle_event(app: &mut App) -> Result<Option<Message>> {
 fn handle_key_event(app: &mut App, key: KeyEvent) -> Option<Message> {
     match &app.mode {
         Mode::Normal => handle_normal_mode(key),
-        Mode::Adding(field) => handle_adding_mode(app, key, field.clone()),
+        Mode::Adding(field) => handle_input_mode(app, key, field.clone(), false),
+        Mode::Editing(field) => handle_input_mode(app, key, field.clone(), true),
         Mode::ConfirmDelete => handle_confirm_delete_mode(key),
     }
 }
@@ -42,6 +43,7 @@ fn handle_normal_mode(key: KeyEvent) -> Option<Message> {
 
         // Actions
         KeyCode::Char('a') => Some(Message::StartAdding),
+        KeyCode::Char('e') => Some(Message::StartEditing),
         KeyCode::Char('d') => Some(Message::StartDelete),
         KeyCode::Char('y') => Some(Message::CopyToClipboard),
         KeyCode::Char('x') | KeyCode::Enter => Some(Message::ExecuteCommand),
@@ -50,15 +52,30 @@ fn handle_normal_mode(key: KeyEvent) -> Option<Message> {
     }
 }
 
-/// Handles key events in Adding mode
-fn handle_adding_mode(app: &mut App, key: KeyEvent, field: AddingField) -> Option<Message> {
+/// Handles key events in Adding or Editing mode
+fn handle_input_mode(
+    app: &mut App,
+    key: KeyEvent,
+    field: InputField,
+    is_editing: bool,
+) -> Option<Message> {
     match key.code {
         // Cancel
-        KeyCode::Esc => Some(Message::CancelAdding),
+        KeyCode::Esc => {
+            if is_editing {
+                Some(Message::CancelEditing)
+            } else {
+                Some(Message::CancelAdding)
+            }
+        }
 
         // Save (Ctrl+S)
         KeyCode::Char('s') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-            Some(Message::ConfirmAdd)
+            if is_editing {
+                Some(Message::ConfirmEdit)
+            } else {
+                Some(Message::ConfirmAdd)
+            }
         }
 
         // Next field (Tab)
@@ -68,7 +85,13 @@ fn handle_adding_mode(app: &mut App, key: KeyEvent, field: AddingField) -> Optio
         KeyCode::BackTab => Some(Message::PrevField),
 
         // Enter in Tags field saves the command
-        KeyCode::Enter if field == AddingField::Tags => Some(Message::ConfirmAdd),
+        KeyCode::Enter if field == InputField::Tags => {
+            if is_editing {
+                Some(Message::ConfirmEdit)
+            } else {
+                Some(Message::ConfirmAdd)
+            }
+        }
 
         // Enter in other fields moves to next field
         KeyCode::Enter => Some(Message::NextField),

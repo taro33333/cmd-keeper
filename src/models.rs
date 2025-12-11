@@ -82,6 +82,30 @@ impl CommandDatabase {
         self.entries.len() < original_len
     }
 
+    /// Updates an existing entry by ID, returns true if found and updated
+    pub fn update(
+        &mut self,
+        id: u64,
+        command: Option<String>,
+        description: Option<String>,
+        tags: Option<Vec<String>>,
+    ) -> bool {
+        if let Some(entry) = self.entries.iter_mut().find(|e| e.id == id) {
+            if let Some(cmd) = command {
+                entry.command = cmd;
+            }
+            if let Some(desc) = description {
+                entry.description = desc;
+            }
+            if let Some(t) = tags {
+                entry.tags = t;
+            }
+            true
+        } else {
+            false
+        }
+    }
+
     /// Searches entries by keyword (searches in command and description)
     pub fn search(&self, keyword: &str) -> Vec<&CommandEntry> {
         let keyword_lower = keyword.to_lowercase();
