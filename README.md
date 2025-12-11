@@ -6,7 +6,7 @@
 
 **[日本語](./README_ja.md)** | English
 
-📝 **A CLI tool to save, manage, and search frequently used commands locally**
+📝 **A CLI tool to save, manage, search, and execute frequently used commands locally**
 
 ## Features
 
