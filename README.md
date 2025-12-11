@@ -1,7 +1,8 @@
 # cmd-keeper
 
+[![CI](https://github.com/taro33333/cmd-keeper/actions/workflows/ci.yml/badge.svg)](https://github.com/taro33333/cmd-keeper/actions/workflows/ci.yml)
+[![Release](https://github.com/taro33333/cmd-keeper/actions/workflows/release.yml/badge.svg)](https://github.com/taro33333/cmd-keeper/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 
 📝 **よく使うコマンドとその説明をローカルで保存・管理・検索するCLIツール**
 
@@ -16,10 +17,36 @@
 
 ## インストール
 
+### Homebrew（推奨）
+
+macOS / Linux ユーザーは Homebrew でインストールできます：
+
+```bash
+brew install taro33333/tap/cmd-keeper
+```
+
+### GitHub Releases
+
+[Releases](https://github.com/taro33333/cmd-keeper/releases) ページからバイナリをダウンロード：
+
+| OS | アーキテクチャ | ファイル名 |
+|----|--------------|-----------|
+| macOS | Apple Silicon (M1/M2) | cmd-keeper-darwin-arm64 |
+| macOS | Intel | cmd-keeper-darwin-amd64 |
+| Linux | x86_64 | cmd-keeper-linux-amd64 |
+| Windows | x86_64 | cmd-keeper-windows-amd64.exe |
+
+```bash
+# 例: macOS Apple Silicon
+curl -LO https://github.com/taro33333/cmd-keeper/releases/latest/download/cmd-keeper-darwin-arm64
+chmod +x cmd-keeper-darwin-arm64
+sudo mv cmd-keeper-darwin-arm64 /usr/local/bin/cmd-keeper
+```
+
 ### ソースからビルド
 
 ```bash
-git clone https://github.com/yourusername/cmd-keeper.git
+git clone https://github.com/taro33333/cmd-keeper.git
 cd cmd-keeper
 cargo install --path .
 ```
@@ -28,6 +55,22 @@ cargo install --path .
 
 ```bash
 cargo install cmd-keeper
+```
+
+## クイックスタート
+
+```bash
+# コマンドを追加
+cmd-keeper add -c "git log --oneline -n 10" -d "直近10件のコミットを表示" -t git
+
+# 一覧表示
+cmd-keeper list
+
+# 検索
+cmd-keeper search git
+
+# クリップボードにコピー
+cmd-keeper copy 1
 ```
 
 ## 使用方法
@@ -158,6 +201,24 @@ cargo fmt
 cargo clippy
 ```
 
+## リリース手順
+
+1. バージョンを更新 (`Cargo.toml`)
+2. タグを作成してプッシュ:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+3. GitHub Actions が自動的にビルド・リリースを実行
+4. Homebrew Formula が自動更新される
+
 ## ライセンス
 
 MIT License
+
+## リンク
+
+- [GitHub Repository](https://github.com/taro33333/cmd-keeper)
+- [Releases](https://github.com/taro33333/cmd-keeper/releases)
