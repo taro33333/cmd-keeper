@@ -38,7 +38,7 @@ colored = "2.1"
 
 # TUI (Terminal User Interface)
 ratatui = "0.29"
-crossterm = "0.28"
+crossterm = "0.29"
 tui-textarea = "0.7"
 
 # Shell command parsing
