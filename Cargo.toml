@@ -37,7 +37,7 @@ arboard = "3.4"
 colored = "2.1"
 
 # TUI (Terminal User Interface)
-ratatui = "0.29"
+ratatui = "0.30"
 crossterm = "0.28"
 tui-textarea = "0.7"
 
